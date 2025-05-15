@@ -1,54 +1,84 @@
-# React + TypeScript + Vite
+# 📝 Text to PDF Converter
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Це простий React-додаток, який дозволяє користувачам конвертувати введений текст у PDF-документ за допомогою API. Після конвертації файл відображається у PDF-переглядачі, а історія конвертацій зберігається локально.
 
-Currently, two official plugins are available:
+## 🚀 Як запустити
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+1. Клонуй репозиторій:
+```bash
+git clone https://github.com/19sem92/universe-group-test-task.git
+cd universe-group-test-task
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+2. Встанови залежності:
+```bash
+npm install
 ```
+
+3. Створи файл `.env` на основі прикладу:
+```
+VITE_API_BASE_URL={YOUR_BASE_URL}
+VITE_API_KEY={YOUR_API_KEY}
+```
+
+4. Запусти локальний сервер:
+```bash
+npm run dev
+```
+
+---
+
+## 🧾 Документація
+
+### 📁 Структура проєкту
+
+```
+src/
+├── api/               # API-клієнти для роботи з бекендом
+│   └── pdfApi.ts
+├── components/        # UI-компоненти з логікою
+│   ├── ConverterForm.tsx
+│   ├── HistoryList.tsx
+│   └── PDFViewer.tsx
+├── hooks/             # Кастомні React-хуки
+│   └── useLocalStorage.ts
+├── storage/           # Робота з IndexedDB
+│   └── indexedDb.ts
+├── types/             # Загальні типи TypeScript
+│   └── index.ts
+├── ui/                # Прості, універсальні UI-компоненти
+│   ├── Button.tsx
+│   ├── Textarea.tsx
+│   └── UIRender.tsx
+├── utils/             # Утиліти: форматування, обрізка тексту тощо
+│   └── format.ts
+├── App.tsx            # Головний компонент додатку
+└── main.tsx           # Точка входу, підключення React Query
+```
+
+### 📦 Основні модулі
+
+- **`pdfApi.ts`** — обгортає запит до бекенду.
+- **`ConverterForm.tsx`** — форма вводу тексту.
+- **`PDFViewer.tsx`** — відображення PDF.
+- **`HistoryList.tsx`** — історія збережених текстів.
+- **`useLocalStorage.ts`** — збереження історії у `localStorage`.
+- **`indexedDb.ts`** — (альтернатива) зберігання `Blob` файлів.
+- **`UIRender.tsx`** — умовний рендер у декларативному стилі.
+
+### 🧠 Архітектурний підхід
+
+- Файлова модульність
+- Масштабованість
+- Розділення UI/бізнес-логіки
+- React Query для API-статусу
+
+---
+
+## ❓ Чому використано `localStorage` замість IndexedDB
+
+У проєкті я залишив реалізацію з `localStorage` як дефолтну через:
+
+- Простоту реалізації
+- Легкий дебаг і контроль у браузері
+- Обсяг збережених даних (лише текст, не файли)
