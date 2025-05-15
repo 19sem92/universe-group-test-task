@@ -9,18 +9,18 @@ import UIRender from './ui/UIRender';
 
 import { createPdf } from './api/pdfApi';
 import { useLocalStorage } from './hooks/useLocalStorage';
-import type { HistoryEntry } from './types';
+import type { ConvertedFile } from './types';
 
 export default function App() {
   const [selectedPdfUrl, setSelectedPdfUrl] = useState<string | null>(null);
-  const [history, setHistory] = useLocalStorage<HistoryEntry[]>('pdfHistory', []);
+  const [history, setHistory] = useLocalStorage<ConvertedFile[]>('pdfHistory', []);
 
   const mutation = useMutation({
     mutationFn: createPdf,
     onSuccess: (blob, text) => {
       const url = URL.createObjectURL(blob);
       setSelectedPdfUrl(url);
-      const entry: HistoryEntry = {
+      const entry: ConvertedFile = {
         id: uuidv4(),
         text,
         createdAt: new Date().toISOString(),
@@ -49,7 +49,7 @@ export default function App() {
         <p className="text-red-500">Сталася помилка при конвертації</p>
       </UIRender>
 
-      <UIRender if={selectedPdfUrl}>
+      <UIRender if={Boolean(selectedPdfUrl)}>
         <PDFViewer url={selectedPdfUrl} />
       </UIRender>
 

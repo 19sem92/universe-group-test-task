@@ -1,11 +1,11 @@
-import type { HistoryEntry } from '../types';
+import type { ConvertedFile } from '../types';
 import { formatDateTime, truncateText } from '../utils/format';
 
 export default function HistoryList({
   history,
   onSelect,
 }: {
-  history: HistoryEntry[];
+  history: ConvertedFile[];
   onSelect: (text: string) => void;
 }) {
   return (
