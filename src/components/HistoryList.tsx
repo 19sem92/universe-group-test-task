@@ -6,7 +6,7 @@ export default function HistoryList({
   onSelect,
 }: {
   history: ConvertedFile[];
-  onSelect: (text: string) => void;
+  onSelect: (id: string) => void;
 }) {
   return (
     <div>
@@ -15,7 +15,7 @@ export default function HistoryList({
         {history.map((file) => (
           <li
             key={file.id}
-            onClick={() => onSelect(file.text)}
+            onClick={() => onSelect(file.id)}
             className="cursor-pointer hover:underline text-blue-700"
           >
             {formatDateTime(file.createdAt)} — {truncateText(file.text)}

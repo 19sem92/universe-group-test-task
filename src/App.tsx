@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useMutation } from '@tanstack/react-query';
+import { savePdf, getPdf } from './utils/indexedDb';
 
 import ConverterForm from './components/ConverterForm';
 import PDFViewer from './components/PDFViewer';
@@ -17,11 +18,13 @@ export default function App() {
 
   const mutation = useMutation({
     mutationFn: createPdf,
-    onSuccess: (blob, text) => {
+    onSuccess: async (blob, text) => {
+      const id = uuidv4();
+      await savePdf(id, blob);
       const url = URL.createObjectURL(blob);
       setSelectedPdfUrl(url);
       const entry: ConvertedFile = {
-        id: uuidv4(),
+        id,
         text,
         createdAt: new Date().toISOString(),
       };
@@ -33,8 +36,14 @@ export default function App() {
     mutation.mutate(text);
   };
 
-  const handleSelectFromHistory = (text: string) => {
-    mutation.mutate(text);
+  const handleSelectFromHistory = async (id: string) => {
+    const blob = await getPdf(id);
+    if (blob) {
+      const url = URL.createObjectURL(blob);
+      setSelectedPdfUrl(url);
+    } else {
+      console.error('PDF not found in IndexedDB');
+    }
   };
 
   return (
